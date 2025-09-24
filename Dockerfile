@@ -1,13 +1,16 @@
-FROM python:3.11-slim
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y fortune-mod cowsay netcat-openbsd && \
+    ln -s /usr/games/fortune /usr/local/bin/fortune && \
+    ln -s /usr/games/cowsay /usr/local/bin/cowsay && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+COPY wisecow.sh .
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN chmod +x wisecow.sh
 
-COPY . .
+EXPOSE 4499
 
-EXPOSE 8000
-
-CMD ["python", "app.py"]
-
+CMD ["./wisecow.sh"]
